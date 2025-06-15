@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-Pesa Spending Predictor</title>
+    <link rel="stylesheet" href="static/style.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+
+<!--   Navbar -->
+<nav class="navbar">
+        <div class="navbar-brand">Mpesa Statements Insights</div>
+    </nav>
+
+        <!-- Prediction -->
+<div class="container">
+        <h1>M-Pesa Spending Predictor</h1>
+        <div class="form-container">
+
+<!--            <form id="prediction">-->
+            <form action="/predict" method="POST">
+
+                <input type="number" id="transactionAmount" name="Transaction_amount" placeholder="Transaction Amount" required>
+                <select name="Transaction_type">
+                    <option value="Buy Goods">Buy Goods </option>
+                    <option value="Pay Bill">Pay Bill </option>
+                    <option value="SEND MONEY">Send Money </option>
+                    <option value="M-SHWARI DEPOSIT FROM M-PESA">M-Shwari Deposit from M-Pesa</option>
+                    <option value="RECEIVED FUNDS">Received Funds</option>
+                    <option value="POCHI LA BIASHARA"> Pochi la Biashara </option>
+                    <option value="M-SHWARI WITHDRAW FROM M-PESA">M-Shwari Withdraw from M-Pesa</option>
+                    <option value="AIRTIME PURCHASE">Airtime Purchase </option>
+                    <option value="CASH WITHDRAWAL CHARGES"> Cash Withdrawal Charges </option>
+                    <option value="BUSINESS PAYMENT">Business Payment</option>
+                    <option value="AGENT DEPOSIT">Agent Deposit</option>
+                </select>
+
+                <select name="Transaction_party">
+                    <option value="FULIZA"> Fuliza</option>
+                    <option value="KPLC PREPAID">Kplc Prepaid</option>
+                    <option value="SAFARICOM DATA BUNDLES"> Safaricom Data Bundles</option>
+                    <option value="TRANSACTION COST">Transaction Cost</option>
+                    <option value="CO-OP BANK VIA API">Co-op Bank</option>
+                    <option value="KCB">KCB</option>
+                    <option value="CHIME INC">Chime Inc</option>
+                    <option value="NOVIA SOLUTIONS">Novia Solution</option>
+                    <option value="M-SHWARI">M-Shwari</option>
+                    <option value="TINGG">Tingg</option>
+                    <option value="SAFARICOM  HOME">Safaricom Home</option>
+                </select>
+
+                <select  name="paid_in_or_Withdraw">
+                    <option value="Pain_in"> Paid In </option>
+                    <option value="Withdrawal">Withdrawal</option>
+                </select>
+<!--                <input type="number" id="balance" name="Balance" placeholder="Account Balance" required>-->
+
+                <button type="submit"> Predict Spending</button>
+            </form>
+        </div>
+        <div id="result" class="result-container"></div>
+    </div>
+
+
+<section class="charts-section">
+
+    <!-- First chart block -->
+    <div class="chart-block">
+        <img src="static/images/Transaction_spend_during_weekday.png" alt="Weekday Spending Chart" class="chart-img">
+        <p class="chart-description">
+            This chart shows that most transactions happen on Mondays, Fridays, and Saturdays. Budget better on those days!
+        </p>
+    </div>
+
+    <!-- Second chart block -->
+    <div class="chart-block">
+        <img src="static/images/Monthly_transaction_over_the_months.png" alt="Daily Spending Trend" class="chart-img">
+        <p class="chart-description">
+            Monthly spending shows March having high Transaction Money spending. Kindly note for better
+            money flows through the year. Optimize your Budget well
+        </p>
+    </div>
+
+    <!-- Third chart block -->
+    <div class="chart-block">
+        <img src="static/images/Transaction_frequency_and_amount_by_hour_of_day.png" alt="Monthly Spending Trend" class="chart-img">
+        <p class="chart-description">
+            Spending shoots up hour 18. Supper time, I presume note to buy less expensive foods
+        </p>
+    </div>
+
+    <!-- Fourth chart block -->
+    <div class="chart-block">
+        <img src="static/images/Daily_transction_where_spending_spikes.png" alt="Monthly Spending Trend" class="chart-img">
+        <p class="chart-description">
+            Chart 4 shows spending spiking at day 3. Shopping day, maybe. Hint: Shop for less expensive products
+        </p>
+    </div>
+
+
+     <!--chart block 5 -->
+    <div class="chart-block">
+        <img src="static/images/Most_used_transaction_type.png" alt="Monthly Spending Trend" class="chart-img">
+        <p class="chart-description">
+            Chart 5 States that you use Buying goods more compared to other transaction types.
+
+        </p>
+    </div>
+
+     <!--chart block 6 -->
+    <div class="chart-block">
+        <img src="static/images/Average_transaction_amount_by_transaction_type.png" alt="Monthly Spending Trend" class="chart-img">
+        <p class="chart-description">
+            Chart 6 States that your average transaction amount goes to Money Received International having a
+             transaction amount of 15,000.
+        </p>
+    </div>
+
+      <!--chart block 7 -->
+    <div class="chart-block">
+        <img src="static/images/(Paid_in)vs(withdraws).png" alt="Monthly Spending Trend" class="chart-img">
+        <p class="chart-description">
+            Chart 7 shows that more money spending goes to withdraw by a count of (957) and paid in (530)
+            this indicates you are using mpesa to pay stuff more and receiving money to mpesa less
+        </p>
+    </div>
+
+
+      <!--chart block 8 -->
+    <div class="chart-block">
+        <img src="static/images/Top20_most_spend_parties(send_receive)_money.png" alt="Monthly Spending Trend" class="chart-img">
+        <p class="chart-description">
+            Chart 8, Barchart shows your Top 20 most spending parties either sending money or receiving the money.
+            Chime INC has the highest spending with transaction amount of (175,000). Use less transaction amount
+            to prevent bankruptcy
+        </p>
+    </div>
+
+
+      <!--chart block 9 -->
+    <div class="chart-block">
+        <img src="static/images/top20_spending_under_withdraw.png" alt="Monthly Spending Trend" class="chart-img">
+        <p class="chart-description">
+            Chart 9, Barchart shows your Top 20 most spending parties under withdrawal.
+            Airtime purchase has the highest spending with transaction amount of 4,500.
+            Use Wireless network to prevent overspending or less phone talking
+        </p>
+    </div>
+
+        <!--chart block 10 -->
+    <div class="chart-block">
+        <img src="static/images/My_balance_trend_over_time.png" alt="Monthly Spending Trend" class="chart-img">
+        <p class="chart-description">
+            Chart 10, Linechart shows your mpesa balance drop drastically after day 3
+            Utilize your money well to see the months' end at a good rate
+        </p>
+    </div>
+
+
+        <!--chart block 10 -->
+    <div class="chart-block">
+        <img src="static/images/Transaction_impact_on_account_balance.png" alt="Monthly Spending Trend" class="chart-img">
+        <p class="chart-description">
+            This ScatterChart shows the higher risk of low balance after a high transaction has occurred
+            Opt for more affordable product for better balance money
+        </p>
+    </div>
+
+</section>
+    <hr class="divider">
+
+<section class="charts-section">
+
+
+        <!--chart block 11 -->
+    <div class="chart-block">
+        <img src="static/images/Actual_vs_predicted_spending_linear_regression.png" alt="Monthly Spending Trend" class="chart-img">
+        <p class="chart-description">
+            This Chart Shows prediction of your Actual Transaction money and the prediction of your money
+            using a Linear regression model.
+        </p>
+    </div>
+
+
+        <!--chart block 11 -->
+    <div class="chart-block">
+        <img src="static/images/Actual_vs_predicted_spending_using_random_forest.png" alt="Monthly Spending Trend" class="chart-img">
+        <p class="chart-description">
+            This Chart Shows prediction of your Actual Transaction money and the prediction of your money
+            using a Random Forest model.
+        </p>
+    </div>
+
+
+        <!--chart block 12 -->
+    <div class="chart-block">
+        <img src="static/images/Actual_vs_predicted_spending_using_xgboost.png" alt="Monthly Spending Trend" class="chart-img">
+        <p class="chart-description">
+            This Chart Shows prediction of your Actual Transaction money and the prediction of your money
+            using a XGBOOST model. It shows an accurate prediction of the model with less error
+        </p>
+    </div>
+
+
+        <!--chart block 12 -->
+    <div class="chart-block">
+        <img src="static/images/mpesa_daily_spending_forecast_using_prophet.png" alt="Monthly Spending Trend" class="chart-img">
+        <p class="chart-description">
+            This Chart Shows prediction of your Mpesa transaction amount in the next 60 days that is next 2 months.
+            The chart indicates an increase in the money spending specifically on Mondays and Saturdays.
+            Note use affordable product and less party for better money spending.
+        </p>
+    </div>
+
+</section>>
+
+
+    <script src="static/script.js"></script> <!-- Link to your JS file -->
+
+    <footer class="footer">
+        <p>&copy;  Mpesa Statement Insights. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
