@@ -1,2 +1,2 @@
-# JupyterAI
-All about the AI with python programming language 
+# JupyterLab
+All about the Python programming language on Jupyter
