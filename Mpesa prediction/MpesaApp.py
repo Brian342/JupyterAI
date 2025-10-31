@@ -167,7 +167,7 @@ with st.sidebar:
     st.markdown("------")
     st.caption("Built w/ Sklearn + Prophet . prototype")
 
-tabs = st.tabs(["Upload & Query", "Insight", "Settings"])
+tabs = st.tabs(["Overview", "Upload & Query", "Insight", "Settings"])
 
 with tabs[0]:
     st.markdown(
@@ -239,3 +239,25 @@ with tabs[0]:
         )
 
     st.markdown("<br>", unsafe_allow_html=True)
+
+with tabs[1]:
+    st.header("Upload Mpesa statement & run a query")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        uploaded_file = st.file_uploader("Uploaded Mpesa statement", type=["pdf"])
+        uploaded_file = BytesIO()
+        uploaded_file.seek(0)
+        st.success("Mpesa Statement Uploaded - press run query")
+
+        run = st.button("Run Query")
+    with col2:
+        st.markdown(
+            "<div class='card'><h4>How to get Mpesa Statement</h4><ul><li>"
+            """You can get an M-Pesa statement by dialing *234#, select "My M-Pesa Information," then "M-Pesa Statement," and follow the prompts to choose a period and enter your email. </li>
+            <li>For the app, log in, go to "M-Pesa Services," then "Statements," choose the duration, and export to your email</li><li>We auto-clean text</li></ul></div>""",
+            unsafe_allow_html=True)
+
+
+
+
+# on the insight section try making it be a dashboard
