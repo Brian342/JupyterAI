@@ -1,14 +1,17 @@
 # import packages
 import streamlit as st
 import pandas as pd
+import pickle
 import plotly.express as px
 from io import BytesIO
+
 
 @st.cache_data
 def load_data():
     with open("Mpesa_model.pkl", 'rb') as f:
         data = pickle.load(f)
         return data
+
 
 st.set_page_config(page_title="MpesaFinancial - Pro", layout="wide", initial_sidebar_state="expanded")
 
@@ -90,7 +93,7 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 with st.sidebar:
     st.markdown(
-        "<div style='display:flex;align-items:center;gap:10px'><div class='logo-circle'>JM</div><div><h3 style='margin:0'>JobMatchAI</h3><div style='font-size:12px;color:gray'>NLP · Transformers · Explainability</div></div></div>",
+        "<div style='display:flex;align-items:center;gap:10px'><div class='logo-circle'>MF</div><div><h3 style='margin:0'>MpesaFinance</h3><div style='font-size:12px;color:gray'>Prophet · Sciki · Explainability</div></div></div>",
         unsafe_allow_html=True)
     st.markdown("------")
     email = st.text_input("Your email (option)", placeholder="you@example.com")
@@ -162,10 +165,77 @@ with st.sidebar:
         st.markdown(AUTO_THEME_SCRIPT, unsafe_allow_html=True)
 
     st.markdown("------")
-    st.caption("Built w/ spacy + Sentence-Transformers . prototype")
+    st.caption("Built w/ Sklearn + Prophet . prototype")
 
-tabs = st.tabs(["Dashboard", "Upload & Query", "Chatbot", "Insight", "Settings"])
+tabs = st.tabs(["Upload & Query", "Insight", "Settings"])
 
+with tabs[0]:
+    st.markdown(
+        """
+        <div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:20px'>
+            <div>
+                <h1 style='margin:0;background:linear-gradient(90deg,#06b6d4,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;'>
+                    MpesaFinance
+                </h1>
+                <div style='color:gray;font-size:15px;'>AI-powered financial governance</div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    # --- Stats cards ---
+    st.markdown("<div style='margin-bottom:10px'></div>", unsafe_allow_html=True)
+    c1, c2, c3, c4 = st.columns([1.8, 1, 1, 1])
 
+    with c1:
+        st.markdown(
+            "<div class='card'><h4 style='margin:0'>What is Mpesa?</h4>"
+            "<div style='color:gray;margin-top:6px'>M-Pesa is a mobile money service launched by Safaricom, Kenya’s leading telecommunications company, in 2007. "
+            "It has revolutionized financial transactions, allowing users to send, receive, deposit, and withdraw money using their mobile phones. "
+            "M-Pesa has played a significant role in financial inclusion, particularly for unbanked populations</div></div>",
+            unsafe_allow_html=True
+        )
 
+    with c2:
+        st.markdown(
+            "<div class='card' style='text-align:center'><h4 style='margin:0'>How M-Pesa Works</h4>"
+            "<div style='color:gray;margin-top:6px'>M-Pesa enables users to perform transactions via USSD codes or the M-Pesa app. "
+            "Users register with Safaricom and link their mobile numbers to an M-Pesa account.</div></div>",
+            unsafe_allow_html=True
+        )
+    services = [
+        "Depositing money at M-Pesa agent shops.",
+        "Sending money to other users and non-users.",
+        "Withdrawing cash from agents or ATMs.",
+        "Merchant payments through Lipa na M-Pesa.",
+    ]
 
+    with c3:
+        st.markdown(
+            f"""
+            <div class='card' style='text-align:center'>
+                <h4 style='margin:0'>Key Services</h4>
+                <div style='color:gray;margin-top:6px'>
+                    {' '.join(services)}
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    challenges = [
+        "High transaction costs:Some users find M-Pesa charges expensive",
+        "for frequent transactions.less finance monitoring and alert on overspending money"
+    ]
+    with c4:
+        st.markdown(
+            f"""
+            <div class='card' style='text-align:center'>
+                <h4 style='margin:0'>Challenges & risks</h4>
+                <div style='color:gray;margin-top:6px'>
+                    {' '.join(challenges)}
+                </div>
+            </div>""",
+            unsafe_allow_html=True
+        )
+
+    st.markdown("<br>", unsafe_allow_html=True)
