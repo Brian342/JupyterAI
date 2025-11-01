@@ -257,7 +257,4 @@ with tabs[1]:
             <li>For the app, log in, go to "M-Pesa Services," then "Statements," choose the duration, and export to your email</li><li>We auto-clean text</li></ul></div>""",
             unsafe_allow_html=True)
 
-
-
-
 # on the insight section try making it be a dashboard
