@@ -265,8 +265,8 @@ with tabs[1]:
 # on the insight section try making it be a dashboard
 with tabs[2]:
     st.markdown("<div style='margin-bottom:10px'></div>", unsafe_allow_html=True)
-    r1c1, r1c2, r1c3 = st.columns([1, 1, 1])
-    r2c1, r2c2, r2c3 = st.columns([3.0, 3.0, 1.5])
+    r1c1, r1c2, r1c3 = st.columns([3, 3, 3])
+    r2c1, r2c2, r2c3 = st.columns([3.0, 3.0, 3.0])
     r3c1, r3c2, r3c3 = st.columns([1.5, 1.5, 1.5])
     r4c1, r4c2, r4c3 = st.columns([1.5, 1.5, 1.5])
 
@@ -309,24 +309,22 @@ with tabs[2]:
         st.plotly_chart(fig, use_container_width=True)
 
     with r2c2:
-        fig = px.line(
-            combined_data,
-            x='Month',
-            y='Transaction_amount',
-            color_discrete_sequence=['#439534'],
-            title='Transaction spend during weekday'
-        )
-        fig.update_xaxes(
-            tickvals=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-            ticktext=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        plt.figure(figsize=(18, 7))
+        plot = sns.lineplot(data=combined_data, x='Month', y='Transaction_amount', color='#439534', errorbar=None)
+        months_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        existing_months = sorted(combined_data['Month'].unique())
+        plot.set_xticks(existing_months)
+        plot.set_xticklabels([months_names[int(i) - 1] for i in existing_months])
+        plot.set_xlim(1, 12)
+        plt.title("Monthly Transaction over the Months", fontsize=15)
+        plt.xticks(fontsize=15)
+        plt.xlabel("Month", fontsize=15)
+        plt.ylabel("Transaction Amount", fontsize=15)
+        plt.yticks(fontsize=15)
+        plt.savefig("Charts/Monthly_transaction_over_the_months.png", dpi=300, bbox_inches='tight')
+        st.pyplot(plt)
 
-        )
-        fig.update_layout(
-            xaxis_title='Month',
-            yaxis_title='Transaction Amount',
-        )
-        st.plotly_chart(fig, use_container_width=True)
     with r2c3:
         st.write("This is the 2nd row")
 
