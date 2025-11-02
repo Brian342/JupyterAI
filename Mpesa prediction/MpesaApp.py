@@ -324,7 +324,7 @@ with tabs[2]:
         )
         existing_month = sorted(combined_data['Month'].unique())
         fig.update_layout(
-            xaxis_title=existing_month,
+            xaxis_title='Month',
             yaxis_title='Transaction Amount',
         )
         st.plotly_chart(fig, use_container_width=True)
