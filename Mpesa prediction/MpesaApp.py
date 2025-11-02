@@ -300,7 +300,7 @@ with tabs[2]:
         plot = sns.barplot(data=combined_data,
                            x='Weekday', y='Transaction_amount', color='#439534', errorbar=None,
                            )
-        plt.xlabel('Weekday', fontsize=20)
+        plt.xlabel('Weekday', fontsize=0)
         plt.xticks(fontsize=20)
         plt.ylabel('Transaction Amount', fontsize=20)
         plt.yticks(fontsize=20)
@@ -322,7 +322,7 @@ with tabs[2]:
         plot.set_xticklabels([months_names[int(i) - 1] for i in existing_months])
         plot.set_xlim(1, 12)
         plt.xticks(fontsize=20)
-        plt.xlabel("Month", fontsize=20)
+        plt.xlabel("Month", fontsize=0)
         plt.ylabel("Transaction Amount", fontsize=20)
         plt.yticks(fontsize=20)
         st.pyplot(plt)
