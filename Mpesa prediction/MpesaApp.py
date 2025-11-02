@@ -265,8 +265,8 @@ with tabs[1]:
 # on the insight section try making it be a dashboard
 with tabs[2]:
     st.markdown("<div style='margin-bottom:10px'></div>", unsafe_allow_html=True)
-    r1c1, r1c2, r1c3 = st.columns([3, 3, 3])
-    r2c1, r2c2, r2c3 = st.columns([3.0, 3.0, 3.0])
+    r1c1, r1c2, r1c3 = st.columns([5, 5, 5])
+    r2c1, r2c2, r2c3 = st.columns([4.5, 4.5, 4.5])
     r3c1, r3c2, r3c3 = st.columns([1.5, 1.5, 1.5])
     r4c1, r4c2, r4c3 = st.columns([1.5, 1.5, 1.5])
 
@@ -291,25 +291,22 @@ with tabs[2]:
 
     with r2c1:
         # Transaction spend
-        fig = px.bar(
-            combined_data,
-            x='Weekday',
-            y='Transaction_amount',
-            color_discrete_sequence=['#439534'],
-            title='Transaction spend during weekday'
-        )
-        fig.update_xaxes(
-            tickvals=[0, 1, 2, 3, 4, 5, 6, 7],
-            ticktext=['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat','Sun']
-        )
-        fig.update_layout(
-            xaxis_title='Weekday',
-            yaxis_title='Transaction Amount',
-        )
-        st.plotly_chart(fig, use_container_width=True)
+        plt.figure(figsize=(20, 8))
+        plt.style.use('seaborn-v0_8-darkgrid')
+        plot = sns.barplot(data=combined_data,
+                           x='Weekday', y='Transaction_amount', color='#439534', errorbar=None,
+                           )
+        plt.title('Transaction spend during weekday', fontsize=20)
+        plt.xlabel('Weekday', fontsize=20)
+        plt.xticks(fontsize=20)
+        plt.ylabel('Transaction Amount', fontsize=20)
+        plt.yticks(fontsize=20)
+        weekday_names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        plot.set_xticklabels([weekday_names[i] for i in plot.get_xticks()])
+        st.pyplot(plt)
 
     with r2c2:
-        plt.figure(figsize=(18, 7))
+        plt.figure(figsize=(20, 8))
         plot = sns.lineplot(data=combined_data, x='Month', y='Transaction_amount', color='#439534', errorbar=None)
         months_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -317,12 +314,11 @@ with tabs[2]:
         plot.set_xticks(existing_months)
         plot.set_xticklabels([months_names[int(i) - 1] for i in existing_months])
         plot.set_xlim(1, 12)
-        plt.title("Monthly Transaction over the Months", fontsize=15)
-        plt.xticks(fontsize=15)
-        plt.xlabel("Month", fontsize=15)
-        plt.ylabel("Transaction Amount", fontsize=15)
-        plt.yticks(fontsize=15)
-        plt.savefig("Charts/Monthly_transaction_over_the_months.png", dpi=300, bbox_inches='tight')
+        plt.title("Monthly Transaction over the Months", fontsize=20)
+        plt.xticks(fontsize=20)
+        plt.xlabel("Month", fontsize=20)
+        plt.ylabel("Transaction Amount", fontsize=20)
+        plt.yticks(fontsize=20)
         st.pyplot(plt)
 
     with r2c3:
