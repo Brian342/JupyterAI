@@ -6,7 +6,7 @@ import plotly.express as px
 from io import BytesIO
 import matplotlib.pyplot as plt
 import seaborn as sns
-from IPython.core.pylabtools import figsize
+import plotly.graph_objects as go
 
 
 @st.cache_data
@@ -378,23 +378,58 @@ with tabs[2]:
         st.pyplot(plt)
 
     with r3c2:
-        plt.figure(figsize=(10, 5))
-        sort = combined_data.sort_values(by='Transaction_type', ascending=False)
-        sns.countplot(data=combined_data, y='Transaction_type', color='#439534',
-                      order=combined_data['Transaction_type'].value_counts().index)
-        plt.title('Most used Transaction Type', fontsize=20)
-        plt.xlabel('Count', fontsize=18)
-        plt.xticks(fontsize=15)
-        plt.ylabel('Transaction Type', fontsize=18)
+        st.markdown(
+            "<h5 style='font-size:16px; font-weight:600;'>Most used Transaction Type</h5>",
+            unsafe_allow_html=True
+        )
+        top_10_types = combined_data['Transaction_type'].value_counts().nlargest(10).index
+        filtered_data = combined_data[combined_data['Transaction_type'].isin(top_10_types)]
+        plt.figure(figsize=(7.8, 6.2))
+        sns.countplot(data=filtered_data, y='Transaction_type', color='#439534',
+                      order=filtered_data['Transaction_type'].value_counts().index)
+        plt.xlabel('Count', fontsize=20)
+        plt.xticks(fontsize=17)
+        plt.ylabel('Transaction Type', fontsize=0)
         plt.yticks(fontsize=15)
-        plt.savefig("Charts/Most_used_transaction_type.png", dpi=300, bbox_inches='tight')
-        plt.show()
-        plt.close()
+        st.pyplot(plt)
     with r3c3:
-        st.write("This is the 3rd row")
+        st.markdown(
+            "<h5 style='font-size:16px; font-weight:600;'>Average Transaction amount by Transaction_type</h5>",
+            unsafe_allow_html=True
+        )
+        top_10_types = combined_data['Transaction_type'].value_counts().nlargest(10).index
+        filtered_data = combined_data[combined_data['Transaction_type'].isin(top_10_types)]
+
+        Grouped_avg_type = (filtered_data.groupby('Transaction_type')['Transaction_amount']
+                            .mean().sort_values(ascending=False).reset_index())
+
+        plt.figure(figsize=(7.8, 6.2))
+        sns.barplot(data=Grouped_avg_type, y='Transaction_type', x='Transaction_amount', order=Grouped_avg_type['Transaction_type'], color='#439534')
+        plt.xlabel('Amount', fontsize=20)
+        plt.ylabel('Transaction_Type', fontsize=0)
+        plt.xticks(fontsize=17)
+        plt.yticks(fontsize=15)
+        st.pyplot(plt)
 
     with r4c1:
-        st.write("This is the 4th row")
+        st.markdown(
+            "<h5 style='font-size:16px; font-weight:600;'>(Paid In) vs. (Withdraws)</h5>",
+            unsafe_allow_html=True
+        )
+        paid_in = combined_data['paid_in_or_Withdraw'].value_counts()
+        plt.figure(figsize=(15, 7))
+        fig = go.Figure(go.Pie(labels=paid_in.index, values=paid_in.values, hole=.5,
+                               marker_colors=['#439534', 'red'],
+                               textinfo='percent+label',
+                               hoverinfo='value'))
+        fig.update_layout(
+            title_text='(Paid In) vs. (Withdraws)',
+            title_x=0.5,  # Center title
+            showlegend=False,
+            height=500,
+        )
+        fig.show()
+        fig.write_image("Charts/(Paid_in)vs(withdraws).png", scale=3)
     with r4c2:
         st.write("This is the 4th row")
     with r4c3:
