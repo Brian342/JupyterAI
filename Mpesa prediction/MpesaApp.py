@@ -299,8 +299,8 @@ with tabs[2]:
             title='Transaction spend during weekday'
         )
         fig.update_xaxes(
-            tickvals=[0, 1, 2, 3, 4, 5, 6],
-            ticktext=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            tickvals=[0, 1, 2, 3, 4, 5, 6, 7],
+            ticktext=['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat','Sun']
         )
         fig.update_layout(
             xaxis_title='Weekday',
@@ -316,12 +316,15 @@ with tabs[2]:
             color_discrete_sequence=['#439534'],
             title='Transaction spend during weekday'
         )
-        # fig.update_xaxes(
-        #     tickvals=[0, 1, 2, 3, 4, 5, 6],
-        #     ticktext=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        # )
+        fig.update_xaxes(
+            tickvals=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+            ticktext=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+        )
+        existing_month = sorted(combined_data['Month'].unique())
         fig.update_layout(
-            xaxis_title='Month',
+            xaxis_title=existing_month,
             yaxis_title='Transaction Amount',
         )
         st.plotly_chart(fig, use_container_width=True)
