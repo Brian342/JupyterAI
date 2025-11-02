@@ -291,12 +291,12 @@ with tabs[2]:
 
     with r2c1:
         # Transaction spend
-        plt.figure(figsize=(20, 8))
+        st.subheader('Transaction spend during weekday')
+        plt.figure(figsize=(10, 4.8))
         plt.style.use('seaborn-v0_8-darkgrid')
         plot = sns.barplot(data=combined_data,
                            x='Weekday', y='Transaction_amount', color='#439534', errorbar=None,
                            )
-        plt.title('Transaction spend during weekday', fontsize=20)
         plt.xlabel('Weekday', fontsize=20)
         plt.xticks(fontsize=20)
         plt.ylabel('Transaction Amount', fontsize=20)
@@ -306,7 +306,8 @@ with tabs[2]:
         st.pyplot(plt)
 
     with r2c2:
-        plt.figure(figsize=(20, 8))
+        st.subheader('Monthly Transaction over the Months')
+        plt.figure(figsize=(10, 5))
         plot = sns.lineplot(data=combined_data, x='Month', y='Transaction_amount', color='#439534', errorbar=None)
         months_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -314,7 +315,6 @@ with tabs[2]:
         plot.set_xticks(existing_months)
         plot.set_xticklabels([months_names[int(i) - 1] for i in existing_months])
         plot.set_xlim(1, 12)
-        plt.title("Monthly Transaction over the Months", fontsize=20)
         plt.xticks(fontsize=20)
         plt.xlabel("Month", fontsize=20)
         plt.ylabel("Transaction Amount", fontsize=20)
@@ -322,7 +322,40 @@ with tabs[2]:
         st.pyplot(plt)
 
     with r2c3:
-        st.write("This is the 2nd row")
+        st.subheader('Transaction Frequency and Amount by Hour of Day')
+        fig, ax1 = plt.subplots(figsize=(10, 5.0))
+
+# Histogram (green)
+        sns.histplot(
+            data=combined_data,
+            x='Hour',
+            color='#439534',
+            binwidth=1,
+            alpha=0.7,
+            ax=ax1
+        )
+        ax1.set_ylabel('Number of Transactions per Hour', color='#439534', fontsize=20)
+        ax1.tick_params(axis='y', labelcolor='#439534', labelsize=20)
+        ax1.set_xlim(0, 23)
+        ax1.set_xlabel('Hour', fontsize=20)
+        ax1.tick_params(axis='x', labelsize=20)
+
+# Line plot (red)
+        ax2 = ax1.twinx()
+        sns.lineplot(
+            data=combined_data.groupby('Hour')['Transaction_amount'].sum().reset_index(),
+            x='Hour',
+            y='Transaction_amount',
+            color='red',
+            linewidth=2.5,
+            ax=ax2
+        )
+        ax2.set_ylabel('Total Transaction Amount', color='red', fontsize=20)
+        ax2.tick_params(axis='y', labelcolor='red', labelsize=20)
+
+# Title and style
+        plt.tight_layout()
+        st.pyplot(fig)
 
     with r3c1:
         st.write("This is the 3rd row")
