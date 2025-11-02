@@ -4,6 +4,9 @@ import pandas as pd
 import pickle
 import plotly.express as px
 from io import BytesIO
+import matplotlib.pyplot as plt
+import seaborn as sns
+from IPython.core.pylabtools import figsize
 
 
 @st.cache_data
@@ -12,6 +15,8 @@ def load_data():
         data = pickle.load(f)
         return data
 
+
+combined_data = load_data()
 
 st.set_page_config(page_title="MpesaFinancial - Pro", layout="wide", initial_sidebar_state="expanded")
 
@@ -261,21 +266,65 @@ with tabs[1]:
 with tabs[2]:
     st.markdown("<div style='margin-bottom:10px'></div>", unsafe_allow_html=True)
     r1c1, r1c2, r1c3 = st.columns([1, 1, 1])
-    r2c1, r2c2, r2c3 = st.columns([1.5, 1.5, 1.5])
+    r2c1, r2c2, r2c3 = st.columns([3.0, 1.5, 1.5])
     r3c1, r3c2, r3c3 = st.columns([1.5, 1.5, 1.5])
     r4c1, r4c2, r4c3 = st.columns([1.5, 1.5, 1.5])
 
     with r1c1:
-        st.write("This is the first row")
+        st.markdown(
+            "<div class='card' style='text-align:center'><h4 style='margin:0'>Balance</h4>"
+            "<div style='font-size:28px;font-weight:700;color:#06b6d4'>1 million</div></div>",
+            unsafe_allow_html=True
+        )
     with r1c2:
-        st.write("This is the first row")
+        st.markdown(
+            "<div class='card' style='text-align:center'><h4 style='margin:0'>Statement Period</h4>"
+            "<div style='font-size:28px;font-weight:700;color:#06b6d4'>2025</div></div>",
+            unsafe_allow_html=True
+        )
     with r1c3:
-        st.write("This is the first row")
+        st.markdown(
+            "<div class='card' style='text-align:center'><h4 style='margin:0'>Statement Period</h4>"
+            "<div style='font-size:28px;font-weight:700;color:#06b6d4'>2025</div></div>",
+            unsafe_allow_html=True
+        )
 
     with r2c1:
-        st.write("This is the 2nd row")
+        # Transaction spend
+        fig = px.bar(
+            combined_data,
+            x='Weekday',
+            y='Transaction_amount',
+            color_discrete_sequence=['#439534'],
+            title='Transaction spend during weekday'
+        )
+        fig.update_xaxes(
+            tickvals=[0, 1, 2, 3, 4, 5, 6],
+            ticktext=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        )
+        fig.update_layout(
+            xaxis_title='Weekday',
+            yaxis_title='Transaction Amount',
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
     with r2c2:
-        st.write("This is the 2nd row")
+        fig = px.line(
+            combined_data,
+            x='Month',
+            y='Transaction_amount',
+            color_discrete_sequence=['#439534'],
+            title='Transaction spend during weekday'
+        )
+        # fig.update_xaxes(
+        #     tickvals=[0, 1, 2, 3, 4, 5, 6],
+        #     ticktext=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        # )
+        fig.update_layout(
+            xaxis_title='Month',
+            yaxis_title='Transaction Amount',
+        )
+        st.plotly_chart(fig, use_container_width=True)
     with r2c3:
         st.write("This is the 2nd row")
 
