@@ -258,3 +258,37 @@ with tabs[1]:
             unsafe_allow_html=True)
 
 # on the insight section try making it be a dashboard
+with tabs[2]:
+    st.markdown("<div style='margin-bottom:10px'></div>", unsafe_allow_html=True)
+    r1c1, r1c2, r1c3 = st.columns([1, 1, 1])
+    r2c1, r2c2, r2c3 = st.columns([1.5, 1.5, 1.5])
+    r3c1, r3c2, r3c3 = st.columns([1.5, 1.5, 1.5])
+    r4c1, r4c2, r4c3 = st.columns([1.5, 1.5, 1.5])
+
+    with r1c1:
+        st.write("This is the first row")
+    with r1c2:
+        st.write("This is the first row")
+    with r1c3:
+        st.write("This is the first row")
+
+    with r2c1:
+        st.write("This is the 2nd row")
+    with r2c2:
+        st.write("This is the 2nd row")
+    with r2c3:
+        st.write("This is the 2nd row")
+
+    with r3c1:
+        st.write("This is the 3rd row")
+    with r3c2:
+        st.write("This is the 3rd row")
+    with r3c3:
+        st.write("This is the 3rd row")
+
+    with r4c1:
+        st.write("This is the 4th row")
+    with r4c2:
+        st.write("This is the 4th row")
+    with r4c3:
+        st.write("This is the 4th row")
