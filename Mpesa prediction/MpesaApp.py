@@ -268,7 +268,7 @@ with tabs[2]:
     r1c1, r1c2, r1c3 = st.columns([5, 5, 5])
     r2c1, r2c2, r2c3 = st.columns([4.5, 4.5, 4.5])
     r3c1, r3c2, r3c3 = st.columns([1.5, 1.5, 1.5])
-    r4c1, r4c2, r4c3 = st.columns([1.5, 1.5, 1.5])
+    r4c1, r4c2 = st.columns([1.5, 5])
 
     with r1c1:
         st.markdown(
@@ -329,11 +329,11 @@ with tabs[2]:
 
     with r2c3:
         st.markdown(
-            "<h5 style='font-size:16px; font-weight:600;'>Transaction Frequency and Amount by Hour of Day</h5>",
+            "<h7 style='font-size:16px; font-weight:600;'>Transaction Frequency and Amount by Hour</h7>",
             unsafe_allow_html=True
         )
         fig, ax1 = plt.subplots(figsize=(10, 5.0))
-# Histogram (green)
+        # Histogram (green)
         sns.histplot(
             data=combined_data,
             x='Hour',
@@ -347,7 +347,7 @@ with tabs[2]:
         ax1.set_xlim(0, 23)
         ax1.set_xlabel('Hour', fontsize=20)
         ax1.tick_params(axis='x', labelsize=20)
-# Line plot (red)
+        # Line plot (red)
         ax2 = ax1.twinx()
         sns.lineplot(
             data=combined_data.groupby('Hour')['Transaction_amount'].sum().reset_index(),
@@ -359,7 +359,7 @@ with tabs[2]:
         )
         ax2.set_ylabel('Total Transaction Amount', color='red', fontsize=20)
         ax2.tick_params(axis='y', labelcolor='red', labelsize=20)
-# Title and style
+        # Title and style
         plt.tight_layout()
         st.pyplot(fig)
 
@@ -394,7 +394,7 @@ with tabs[2]:
         st.pyplot(plt)
     with r3c3:
         st.markdown(
-            "<h5 style='font-size:16px; font-weight:600;'>Average Transaction amount by Transaction_type</h5>",
+            "<h7 style='font-size:16px; font-weight:600;'>Avg Transaction amount by Transaction_type</h7>",
             unsafe_allow_html=True
         )
         top_10_types = combined_data['Transaction_type'].value_counts().nlargest(10).index
@@ -404,7 +404,8 @@ with tabs[2]:
                             .mean().sort_values(ascending=False).reset_index())
 
         plt.figure(figsize=(7.8, 6.2))
-        sns.barplot(data=Grouped_avg_type, y='Transaction_type', x='Transaction_amount', order=Grouped_avg_type['Transaction_type'], color='#439534')
+        sns.barplot(data=Grouped_avg_type, y='Transaction_type', x='Transaction_amount',
+                    order=Grouped_avg_type['Transaction_type'], color='#439534')
         plt.xlabel('Amount', fontsize=20)
         plt.ylabel('Transaction_Type', fontsize=0)
         plt.xticks(fontsize=17)
@@ -417,20 +418,55 @@ with tabs[2]:
             unsafe_allow_html=True
         )
         paid_in = combined_data['paid_in_or_Withdraw'].value_counts()
-        plt.figure(figsize=(15, 7))
-        fig = go.Figure(go.Pie(labels=paid_in.index, values=paid_in.values, hole=.5,
+        plt.figure(figsize=(7.8, 6.2))
+        fig = go.Figure(go.Pie(labels=paid_in.index, values=paid_in.values, hole=.4,
                                marker_colors=['#439534', 'red'],
                                textinfo='percent+label',
                                hoverinfo='value'))
         fig.update_layout(
-            title_text='(Paid In) vs. (Withdraws)',
-            title_x=0.5,  # Center title
             showlegend=False,
-            height=500,
+            height=450,
         )
-        fig.show()
-        fig.write_image("Charts/(Paid_in)vs(withdraws).png", scale=3)
+        st.plotly_chart(fig, use_container_width=True)
+
     with r4c2:
-        st.write("This is the 4th row")
-    with r4c3:
-        st.write("This is the 4th row")
+        st.markdown(
+            "<h5 style='font-size:16px; font-weight:600;'>Transaction Impact on Account Balance</h5>",
+            unsafe_allow_html=True
+        )
+        plt.figure(figsize=(18, 7))
+        Low_balance = 100
+        big_transaction = combined_data['Transaction_amount'].quantile(.75)
+
+        sns.scatterplot(
+            data=combined_data, x='Transaction_amount', y='Balance',
+            hue=combined_data['Transaction_amount'] < Low_balance,
+            palette={True: 'red', False: "#439534"},
+            style=combined_data["Transaction_amount"] > big_transaction,
+            markers={True: 'X', False: 'o'},
+            size=combined_data['Transaction_amount'],
+            sizes=(20, 200),
+            alpha=0.9
+        )
+        # Add reference lines
+        plt.axvline(big_transaction, color='blue', linestyle='--', label='Big Transaction Threshold')
+        plt.axhline(Low_balance, color='red', linestyle='--', label='Low Balance Threshold')
+
+        plt.xlabel('Transaction Amount', fontsize=15)
+        plt.ylabel('Account Balance', fontsize=15)
+        plt.xticks(fontsize=15)
+        plt.yticks(fontsize=15)
+        plt.legend(title='Risk Indicators', bbox_to_anchor=(1.05, 1), loc='upper left')
+
+        #  risk zones
+        plt.text(
+            x=big_transaction * 1.1,
+            y=Low_balance * 0.5,
+            s='High Risk Zone',
+            color='red',
+            fontsize=12,
+            bbox=dict(facecolor='white', alpha=0.8)
+        )
+
+        plt.tight_layout()
+        st.pyplot(plt)
