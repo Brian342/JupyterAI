@@ -266,7 +266,7 @@ with tabs[1]:
 with tabs[2]:
     st.markdown("<div style='margin-bottom:10px'></div>", unsafe_allow_html=True)
     r1c1, r1c2, r1c3 = st.columns([1, 1, 1])
-    r2c1, r2c2, r2c3 = st.columns([3.0, 1.5, 1.5])
+    r2c1, r2c2, r2c3 = st.columns([3.0, 3.0, 1.5])
     r3c1, r3c2, r3c3 = st.columns([1.5, 1.5, 1.5])
     r4c1, r4c2, r4c3 = st.columns([1.5, 1.5, 1.5])
 
@@ -322,7 +322,6 @@ with tabs[2]:
                       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
         )
-        existing_month = sorted(combined_data['Month'].unique())
         fig.update_layout(
             xaxis_title='Month',
             yaxis_title='Transaction Amount',
