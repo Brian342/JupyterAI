@@ -332,9 +332,7 @@ with tabs[2]:
             "<h5 style='font-size:16px; font-weight:600;'>Transaction Frequency and Amount by Hour of Day</h5>",
             unsafe_allow_html=True
         )
-
         fig, ax1 = plt.subplots(figsize=(10, 5.0))
-
 # Histogram (green)
         sns.histplot(
             data=combined_data,
@@ -349,7 +347,6 @@ with tabs[2]:
         ax1.set_xlim(0, 23)
         ax1.set_xlabel('Hour', fontsize=20)
         ax1.tick_params(axis='x', labelsize=20)
-
 # Line plot (red)
         ax2 = ax1.twinx()
         sns.lineplot(
@@ -362,15 +359,37 @@ with tabs[2]:
         )
         ax2.set_ylabel('Total Transaction Amount', color='red', fontsize=20)
         ax2.tick_params(axis='y', labelcolor='red', labelsize=20)
-
 # Title and style
         plt.tight_layout()
         st.pyplot(fig)
 
     with r3c1:
-        st.write("This is the 3rd row")
+        st.markdown(
+            "<h5 style='font-size:16px; font-weight:600;'>Daily Transaction where spending spikes</h5>",
+            unsafe_allow_html=True
+        )
+        plt.figure(figsize=(10, 5))
+        plot = sns.lineplot(data=combined_data, x='Date', y='Transaction_amount', errorbar=None, color='#439534')
+        plot.set_xlim(1, 32)
+        plt.xticks(fontsize=20)
+        plt.xlabel("Date", fontsize=20)
+        plt.ylabel("Transaction Amount", fontsize=20)
+        plt.yticks(fontsize=20)
+        st.pyplot(plt)
+
     with r3c2:
-        st.write("This is the 3rd row")
+        plt.figure(figsize=(10, 5))
+        sort = combined_data.sort_values(by='Transaction_type', ascending=False)
+        sns.countplot(data=combined_data, y='Transaction_type', color='#439534',
+                      order=combined_data['Transaction_type'].value_counts().index)
+        plt.title('Most used Transaction Type', fontsize=20)
+        plt.xlabel('Count', fontsize=18)
+        plt.xticks(fontsize=15)
+        plt.ylabel('Transaction Type', fontsize=18)
+        plt.yticks(fontsize=15)
+        plt.savefig("Charts/Most_used_transaction_type.png", dpi=300, bbox_inches='tight')
+        plt.show()
+        plt.close()
     with r3c3:
         st.write("This is the 3rd row")
 
