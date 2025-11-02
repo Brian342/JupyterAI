@@ -291,7 +291,10 @@ with tabs[2]:
 
     with r2c1:
         # Transaction spend
-        st.subheader('Transaction spend during weekday')
+        st.markdown(
+            "<h5 style='font-size:16px; font-weight:600;'>Transaction spend during weekday</h5>",
+            unsafe_allow_html=True
+        )
         plt.figure(figsize=(10, 4.8))
         plt.style.use('seaborn-v0_8-darkgrid')
         plot = sns.barplot(data=combined_data,
@@ -306,7 +309,10 @@ with tabs[2]:
         st.pyplot(plt)
 
     with r2c2:
-        st.subheader('Monthly Transaction over the Months')
+        st.markdown(
+            "<h5 style='font-size:16px; font-weight:600;'>Monthly Transaction over the Months</h5>",
+            unsafe_allow_html=True
+        )
         plt.figure(figsize=(10, 5))
         plot = sns.lineplot(data=combined_data, x='Month', y='Transaction_amount', color='#439534', errorbar=None)
         months_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -322,7 +328,11 @@ with tabs[2]:
         st.pyplot(plt)
 
     with r2c3:
-        st.subheader('Transaction Frequency and Amount by Hour of Day')
+        st.markdown(
+            "<h5 style='font-size:16px; font-weight:600;'>Transaction Frequency and Amount by Hour of Day</h5>",
+            unsafe_allow_html=True
+        )
+
         fig, ax1 = plt.subplots(figsize=(10, 5.0))
 
 # Histogram (green)
