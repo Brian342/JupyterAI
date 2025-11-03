@@ -1,8 +1,8 @@
 import io
-
 import pandas as pd
 import numpy as np
 import PyPDF2
+import pdfplumber
 import pikepdf
 import warnings
 warnings.filterwarnings('ignore')
@@ -23,3 +23,10 @@ def extract_mpesa_data(uploaded_file, password=None):
 
         with pikepdf.open(io.BytesIO(file_byte), password=password) as pdf:
             decrypted_byte = io.BytesIO()
+            pdf.save(decrypted_byte)
+            decrypted_byte.seek(0)
+
+        with pdfplumber.open(decrypted_byte) as pdf:
+            text = ""
+            for page in pdf.pages:
+                text += page.extract_text() + "\n"
