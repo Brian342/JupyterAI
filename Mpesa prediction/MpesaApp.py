@@ -3,10 +3,11 @@ import streamlit as st
 import pandas as pd
 import pickle
 import plotly.express as px
-from io import BytesIO
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.graph_objects as go
+from io import BytesIO
+from Extract_pdf import extract_mpesa_data
 
 
 @st.cache_data
@@ -250,11 +251,21 @@ with tabs[1]:
     col1, col2 = st.columns([2, 1])
     with col1:
         uploaded_file = st.file_uploader("Uploaded Mpesa statement", type=["pdf"])
-        uploaded_file = BytesIO()
-        uploaded_file.seek(0)
-        st.success("Mpesa Statement Uploaded - press run query")
+        password = st.text_input("If your PDF is password-protected, enter password:", type="password")
 
-        run = st.button("Run Query")
+        if uploaded_file is not None:
+            st.success("File uploaded successfully!")
+
+            # Step 1: Extract Data
+            with st.spinner("Extracting data from your statement..."):
+                df = extract_mpesa_data(uploaded_file, password=password or None)
+
+            if df is not None and not df.empty:
+                st.write("### Transactions Extracted:")
+                st.dataframe(df.head())
+
+                # with st.spinner("Cleaning and preparing data..."):
+                #     clean_df = preprocess_data(df)
     with col2:
         st.markdown(
             "<div class='card'><h4>How to get Mpesa Statement</h4><ul><li>"
