@@ -8,6 +8,7 @@ import seaborn as sns
 import plotly.graph_objects as go
 from io import BytesIO
 from Extract_pdf import extract_mpesa_data
+from cleaning import *
 
 
 @st.cache_data
@@ -262,10 +263,21 @@ with tabs[1]:
 
             if df is not None and not df.empty:
                 st.write("### Transactions Extracted:")
-                st.dataframe(df.head())
 
-                # with st.spinner("Cleaning and preparing data..."):
-                #     clean_df = preprocess_data(df)
+                data = df.copy()
+                data['Paid in'] = data['Paid in'].apply(lambda x: remove_comma(x))
+                data['Withdraw\rn'] = data['Withdraw\rn'].apply(lambda x: remove_comma(x))
+                data['Balance'] = data['Balance'].apply(lambda x: remove_comma(x))
+
+                # changing the data type
+                data = data.astype({
+                    'Paid in': float,
+                    'Withdraw\rn': float,
+                    'Balance': float
+                })
+
+                st.dataframe(data.head())
+
     with col2:
         st.markdown(
             "<div class='card'><h4>How to get Mpesa Statement</h4><ul><li>"
