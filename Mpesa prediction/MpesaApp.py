@@ -266,6 +266,7 @@ with tabs[1]:
                 st.dataframe(df.head())
 
             with st.spinner("cleaning data from your statement ..."):
+                st.write('### Cleaned Statement:')
                 data = df.copy()
                 data['Paid in'] = data['Paid in'].apply(lambda x: remove_comma(x))
                 data['Withdraw\rn'] = data['Withdraw\rn'].apply(lambda x: remove_comma(x))
