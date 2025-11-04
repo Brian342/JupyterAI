@@ -370,7 +370,7 @@ with tabs[2]:
     with r1c1:
         st.markdown(
             "<div class='card' style='text-align:center'><h4 style='margin:0'>Balance</h4>"
-            "<div style='font-size:28px;font-weight:700;color:#06b6d4'>1 million</div></div>",
+            f"<div style='font-size:28px;font-weight:700;color:#06b6d4'>{round(final_data['Balance'].sum())} </div></div>",
             unsafe_allow_html=True
         )
     with r1c2:
