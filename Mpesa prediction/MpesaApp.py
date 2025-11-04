@@ -394,7 +394,7 @@ with tabs[2]:
         )
         plt.figure(figsize=(10, 4.8))
         plt.style.use('seaborn-v0_8-darkgrid')
-        plot = sns.barplot(data=combined_data,
+        plot = sns.barplot(data=final_data,
                            x='Weekday', y='Transaction_amount', color='#439534', errorbar=None,
                            )
         plt.xlabel('Weekday', fontsize=0)
@@ -411,10 +411,10 @@ with tabs[2]:
             unsafe_allow_html=True
         )
         plt.figure(figsize=(10, 5))
-        plot = sns.lineplot(data=combined_data, x='Month', y='Transaction_amount', color='#439534', errorbar=None)
+        plot = sns.lineplot(data=final_data, x='Month', y='Transaction_amount', color='#439534', errorbar=None)
         months_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        existing_months = sorted(combined_data['Month'].unique())
+        existing_months = sorted(final_data['Month'].unique())
         plot.set_xticks(existing_months)
         plot.set_xticklabels([months_names[int(i) - 1] for i in existing_months])
         plot.set_xlim(1, 12)
@@ -432,7 +432,7 @@ with tabs[2]:
         fig, ax1 = plt.subplots(figsize=(10, 5.0))
         # Histogram (green)
         sns.histplot(
-            data=combined_data,
+            data=final_data,
             x='Hour',
             color='#439534',
             binwidth=1,
@@ -447,7 +447,7 @@ with tabs[2]:
         # Line plot (red)
         ax2 = ax1.twinx()
         sns.lineplot(
-            data=combined_data.groupby('Hour')['Transaction_amount'].sum().reset_index(),
+            data=final_data.groupby('Hour')['Transaction_amount'].sum().reset_index(),
             x='Hour',
             y='Transaction_amount',
             color='red',
@@ -466,7 +466,7 @@ with tabs[2]:
             unsafe_allow_html=True
         )
         plt.figure(figsize=(10, 5))
-        plot = sns.lineplot(data=combined_data, x='Date', y='Transaction_amount', errorbar=None, color='#439534')
+        plot = sns.lineplot(data=final_data, x='Date', y='Transaction_amount', errorbar=None, color='#439534')
         plot.set_xlim(1, 32)
         plt.xticks(fontsize=20)
         plt.xlabel("Date", fontsize=20)
@@ -479,8 +479,8 @@ with tabs[2]:
             "<h5 style='font-size:16px; font-weight:600;'>Most used Transaction Type</h5>",
             unsafe_allow_html=True
         )
-        top_10_types = combined_data['Transaction_type'].value_counts().nlargest(10).index
-        filtered_data = combined_data[combined_data['Transaction_type'].isin(top_10_types)]
+        top_10_types = final_data['Transaction_type'].value_counts().nlargest(10).index
+        filtered_data = final_data[final_data['Transaction_type'].isin(top_10_types)]
         plt.figure(figsize=(7.8, 6.2))
         sns.countplot(data=filtered_data, y='Transaction_type', color='#439534',
                       order=filtered_data['Transaction_type'].value_counts().index)
@@ -494,8 +494,8 @@ with tabs[2]:
             "<h7 style='font-size:16px; font-weight:600;'>Avg Transaction amount by Transaction_type</h7>",
             unsafe_allow_html=True
         )
-        top_10_types = combined_data['Transaction_type'].value_counts().nlargest(10).index
-        filtered_data = combined_data[combined_data['Transaction_type'].isin(top_10_types)]
+        top_10_types = final_data['Transaction_type'].value_counts().nlargest(10).index
+        filtered_data = final_data[final_data['Transaction_type'].isin(top_10_types)]
 
         Grouped_avg_type = (filtered_data.groupby('Transaction_type')['Transaction_amount']
                             .mean().sort_values(ascending=False).reset_index())
@@ -514,7 +514,7 @@ with tabs[2]:
             "<h5 style='font-size:16px; font-weight:600;'>(Paid In) vs. (Withdraws)</h5>",
             unsafe_allow_html=True
         )
-        paid_in = combined_data['paid_in_or_Withdraw'].value_counts()
+        paid_in = final_data['paid_in_or_Withdraw'].value_counts()
         plt.figure(figsize=(7.8, 6.2))
         fig = go.Figure(go.Pie(labels=paid_in.index, values=paid_in.values, hole=.4,
                                marker_colors=['#439534', 'red'],
@@ -533,15 +533,15 @@ with tabs[2]:
         )
         plt.figure(figsize=(18, 7))
         Low_balance = 100
-        big_transaction = combined_data['Transaction_amount'].quantile(.75)
+        big_transaction = final_data['Transaction_amount'].quantile(.75)
 
         sns.scatterplot(
-            data=combined_data, x='Transaction_amount', y='Balance',
-            hue=combined_data['Transaction_amount'] < Low_balance,
+            data=final_data, x='Transaction_amount', y='Balance',
+            hue=final_data['Transaction_amount'] < Low_balance,
             palette={True: 'red', False: "#439534"},
-            style=combined_data["Transaction_amount"] > big_transaction,
+            style=final_data["Transaction_amount"] > big_transaction,
             markers={True: 'X', False: 'o'},
-            size=combined_data['Transaction_amount'],
+            size=final_data['Transaction_amount'],
             sizes=(20, 200),
             alpha=0.9
         )
