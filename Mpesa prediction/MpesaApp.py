@@ -413,13 +413,21 @@ with tabs[2]:
             "<h5 style='font-size:16px; font-weight:600;'>Monthly Transaction over the Months</h5>",
             unsafe_allow_html=True
         )
-        plt.figure(figsize=(10, 5))
-        plot = sns.lineplot(data=final_data, x='Month', y='Transaction_amount', color='#439534', errorbar=None)
+        final_data['Month'] = pd.to_numeric(final_data['Month'], errors='coerce')
         months_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                         'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        existing_months = sorted(final_data['Month'].unique())
+        existing_months = sorted(final_data['Month'].dropna().unique())
+        plt.figure(figsize=(10, 5))
+        plot = sns.lineplot(
+            data=final_data,
+            x='Month',
+            y='Transaction_amount',
+            color='#439534',
+            markers='o',
+            errorbar=None)
         plot.set_xticks(existing_months)
         plot.set_xticklabels([months_names[int(i) - 1] for i in existing_months])
+        plot.set_xlim(min(existing_months) - 0.5, max(existing_months) + 0.5)
         plot.set_xlim(1, 12)
         plt.xticks(fontsize=20)
         plt.xlabel("Month", fontsize=0)
