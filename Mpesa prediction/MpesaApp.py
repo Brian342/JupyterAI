@@ -14,8 +14,8 @@ from cleaning import *
 @st.cache_data
 def load_data():
     with open("Mpesa_model.pkl", 'rb') as f:
-        data = pickle.load(f)
-        return data
+        data1 = pickle.load(f)
+        return data1
 
 
 combined_data = load_data()
