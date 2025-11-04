@@ -264,19 +264,89 @@ with tabs[1]:
             if df is not None and not df.empty:
                 st.write("### Transactions Extracted:")
 
-                data = df.copy()
-                data['Paid in'] = data['Paid in'].apply(lambda x: remove_comma(x))
-                data['Withdraw\rn'] = data['Withdraw\rn'].apply(lambda x: remove_comma(x))
-                data['Balance'] = data['Balance'].apply(lambda x: remove_comma(x))
+            data = df.copy()
+            data['Paid in'] = data['Paid in'].apply(lambda x: remove_comma(x))
+            data['Withdraw\rn'] = data['Withdraw\rn'].apply(lambda x: remove_comma(x))
+            data['Balance'] = data['Balance'].apply(lambda x: remove_comma(x))
 
-                # changing the data type
-                data = data.astype({
-                    'Paid in': float,
-                    'Withdraw\rn': float,
-                    'Balance': float
-                })
+            # changing the data type
+            data = data.astype({
+                'Paid in': float,
+                'Withdraw\rn': float,
+                'Balance': float
+            })
+            data.drop(columns=['Unnamed: 0'], inplace=True)
+            data['Details'] = data['Details'].apply(lambda x: x.replace('\r', ' '))
 
-                st.dataframe(data.head())
+            details = list(data['Details'].apply(lambda x: transaction(x)).values)
+            transactionType = [i[0] for i in details]
+            TransactionParty = [i[1] for i in details]
+
+            # formating the time column
+            date = data['Completion Time'].apply(lambda x: change_date(x)).values
+            Year = [i[0] for i in date]
+            Month = [i[1] for i in date]
+            Date = [i[2] for i in date]
+            Weekday = [i[3] for i in date]
+            Hour = [i[4] for i in date]
+            Minute = [i[5] for i in date]
+            Seconds = [i[6] for i in date]
+
+            transactionDay = []
+
+            reverseDay = Date.copy()[::-1]
+            datey = reverseDay[0]
+
+            d = 1
+
+            for i in reverseDay:
+                if i == datey:
+                    transactionDay.append(d)
+                else:
+                    datey = i
+                    d += 1
+                    transactionDay.append(d)
+
+            transactionDay.reverse()
+
+            receipt = data['Receipt No'].to_list()
+            paid_in = data['Paid in'].fillna('NAN_VALUE').values
+            withdraw = list(data['Withdraw\rn'].apply(lambda x: withdrawAmount(x)).values)
+
+            transaction_Data = []
+
+            for i in range(len(paid_in)):
+                try:
+                    x = float(paid_in[i])
+                    transaction_Data.append((x, 'PAID IN'))
+                except:
+                    x = float(withdraw[i])
+                    transaction_Data.append((x, 'WITHDRAW'))
+
+            transaction_amount = [i[0] for i in transaction_Data]
+            paid_in_or_withdraw = [i[1] for i in transaction_Data]
+
+            balance = data["Balance"].to_list()
+
+            final_data = pd.DataFrame({
+                "Receipt": receipt,
+                "transaction_Day": transactionDay,
+                "Year": Year,
+                "Month": Month,
+                "Date": Date,
+                "Weekday": Weekday,
+                "Hour": Hour,
+                "Minute": Minute,
+                "Seconds": Seconds,
+                "Transaction_type": transactionType,
+                "Transaction_party": TransactionParty,
+                "Transaction_amount": transaction_amount,
+                "paid_in_or_Withdraw": paid_in_or_withdraw,
+                "Balance": balance
+            })
+            final_data.set_index('Receipt', inplace=True)
+
+            st.dataframe(final_data.head())
 
     with col2:
         st.markdown(
