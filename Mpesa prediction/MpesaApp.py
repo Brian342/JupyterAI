@@ -374,15 +374,18 @@ with tabs[2]:
             unsafe_allow_html=True
         )
     with r1c2:
+        year = final_data['Year'].iloc[0]
         st.markdown(
-            "<div class='card' style='text-align:center'><h4 style='margin:0'>Statement Period</h4>"
-            "<div style='font-size:28px;font-weight:700;color:#06b6d4'>2025</div></div>",
+            "<div class='card' style='text-align:center'><h4 style='margin:0'>Statement Year</h4>"
+            f"<div style='font-size:28px;font-weight:700;color:#06b6d4'>{year}</div></div>",
             unsafe_allow_html=True
         )
     with r1c3:
+        months = ', '.join(str(y) for y in final_data['Month'].unique())
+
         st.markdown(
-            "<div class='card' style='text-align:center'><h4 style='margin:0'>Statement Period</h4>"
-            "<div style='font-size:28px;font-weight:700;color:#06b6d4'>2025</div></div>",
+            "<div class='card' style='text-align:center'><h4 style='margin:0'>Statement Month(s)</h4>"
+            f"<div style='font-size:28px;font-weight:700;color:#06b6d4'>{months}</div></div>",
             unsafe_allow_html=True
         )
 
