@@ -100,7 +100,7 @@ st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 with st.sidebar:
     st.markdown(
-        "<div style='display:flex;align-items:center;gap:10px'><div class='logo-circle'>MF</div><div><h3 style='margin:0'>MpesaFinance</h3><div style='font-size:12px;color:gray'>Prophet · Sciki · Explainability</div></div></div>",
+        "<div style='display:flex;align-items:center;gap:10px'><div class='logo-circle'>MF</div><div><h3 style='margin:0'>MpesaFinance</h3><div style='font-size:12px;color:gray'>Prophet · Sklearn · Explainability</div></div></div>",
         unsafe_allow_html=True)
     st.markdown("------")
     email = st.text_input("Your email (option)", placeholder="you@example.com")
@@ -286,7 +286,7 @@ with tabs[1]:
                 transactionType = [i[0] for i in details]
                 TransactionParty = [i[1] for i in details]
 
-            # formating the time column
+                # formating the time column
                 date = data['Completion Time'].apply(lambda x: change_date(x)).values
                 Year = [i[0] for i in date]
                 Month = [i[1] for i in date]
@@ -351,6 +351,8 @@ with tabs[1]:
                 final_data.set_index('Receipt', inplace=True)
 
                 st.dataframe(final_data.head())
+                print(final_data.columns)
+                st.session_state["final_data"] = final_data
 
     with col2:
         st.markdown(
@@ -361,224 +363,237 @@ with tabs[1]:
 
 # on the insight section try making it be a dashboard
 with tabs[2]:
-    st.markdown("<div style='margin-bottom:10px'></div>", unsafe_allow_html=True)
-    r1c1, r1c2, r1c3 = st.columns([5, 5, 5])
-    r2c1, r2c2, r2c3 = st.columns([4.5, 4.5, 4.5])
-    r3c1, r3c2, r3c3 = st.columns([1.5, 1.5, 1.5])
-    r4c1, r4c2 = st.columns([1.5, 5])
+    if "final_data" in st.session_state:
+        final_data = st.session_state["final_data"]
+        st.markdown("<div style='margin-bottom:10px'></div>", unsafe_allow_html=True)
+        r1c1, r1c2, r1c3 = st.columns([5, 5, 5])
+        r2c1, r2c2, r2c3 = st.columns([4.5, 4.5, 4.5])
+        r3c1, r3c2, r3c3 = st.columns([1.5, 1.5, 1.5])
+        r4c1, r4c2 = st.columns([1.5, 5])
+        with r1c1:
+            st.markdown(
+                "<div class='card' style='text-align:center'><h4 style='margin:0'>Balance</h4>"
+                f"<div style='font-size:28px;font-weight:700;color:#06b6d4'>{round(final_data['Balance'].sum())}</div></div>",
+                unsafe_allow_html=True
 
-    with r1c1:
-        st.markdown(
-            "<div class='card' style='text-align:center'><h4 style='margin:0'>Balance</h4>"
-            f"<div style='font-size:28px;font-weight:700;color:#06b6d4'>{round(final_data['Balance'].sum())} </div></div>",
-            unsafe_allow_html=True
-        )
-    with r1c2:
-        year = final_data['Year'].iloc[0]
-        st.markdown(
-            "<div class='card' style='text-align:center'><h4 style='margin:0'>Statement Year</h4>"
-            f"<div style='font-size:28px;font-weight:700;color:#06b6d4'>{year}</div></div>",
-            unsafe_allow_html=True
-        )
-    with r1c3:
-        months = ', '.join(str(y) for y in final_data['Month'].unique())
+            )
+        with r1c2:
+            year = final_data['Year'].iloc[0]
+            st.markdown(
+                "<div class='card' style='text-align:center'><h4 style='margin:0'>Statement Year</h4>"
+                f"<div style='font-size:28px;font-weight:700;color:#06b6d4'>{year}</div></div>",
+                unsafe_allow_html=True
+            )
+        with r1c3:
+            months = ', '.join(str(y) for y in final_data['Month'].unique())
 
-        st.markdown(
-            "<div class='card' style='text-align:center'><h4 style='margin:0'>Statement Month(s)</h4>"
-            f"<div style='font-size:28px;font-weight:700;color:#06b6d4'>{months}</div></div>",
-            unsafe_allow_html=True
-        )
+            st.markdown(
+                "<div class='card' style='text-align:center'><h4 style='margin:0'>Statement Month(s)</h4>"
+                f"<div style='font-size:28px;font-weight:700;color:#06b6d4'>{months}</div></div>",
+                unsafe_allow_html=True
+            )
 
-    with r2c1:
-        # Transaction spend
-        st.markdown(
-            "<h5 style='font-size:16px; font-weight:600;'>Transaction spend during weekday</h5>",
-            unsafe_allow_html=True
-        )
-        plt.figure(figsize=(10, 4.8))
-        plt.style.use('seaborn-v0_8-darkgrid')
-        plot = sns.barplot(data=final_data,
-                           x='Weekday', y='Transaction_amount', color='#439534', errorbar=None,
-                           )
-        plt.xlabel('Weekday', fontsize=0)
-        plt.xticks(fontsize=20)
-        plt.ylabel('Transaction Amount', fontsize=20)
-        plt.yticks(fontsize=20)
-        weekday_names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        plot.set_xticklabels([weekday_names[i] for i in plot.get_xticks()])
-        st.pyplot(plt)
+        with r2c1:
+            # Transaction spend
+            st.markdown(
+                "<h5 style='font-size:16px; font-weight:600;'>Transaction spend during weekday</h5>",
+                unsafe_allow_html=True
+            )
+            plt.figure(figsize=(10, 4.8))
+            plt.style.use('seaborn-v0_8-darkgrid')
+            plot = sns.barplot(data=final_data,
+                               x='Weekday', y='Transaction_amount', color='#439534', errorbar=None,
+                               )
+            plt.xlabel('Weekday', fontsize=0)
+            plt.xticks(fontsize=20)
+            plt.ylabel('Transaction Amount', fontsize=20)
+            plt.yticks(fontsize=20)
+            weekday_names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            plot.set_xticklabels([weekday_names[i] for i in plot.get_xticks()])
+            st.pyplot(plt)
+            plt.close()
 
-    with r2c2:
-        st.markdown(
-            "<h5 style='font-size:16px; font-weight:600;'>Monthly Transaction over the Months</h5>",
-            unsafe_allow_html=True
-        )
-        final_data['Month'] = pd.to_numeric(final_data['Month'], errors='coerce')
+        with r2c2:
+            st.markdown(
+                "<h5 style='font-size:16px; font-weight:600;'>Monthly Transaction over the Months</h5>",
+                unsafe_allow_html=True
+            )
+            final_data['Month'] = pd.to_numeric(final_data['Month'], errors='coerce')
 
-        months_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            months_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-        existing_months = sorted(final_data['Month'].dropna().unique())
-        plt.figure(figsize=(10, 5))
-        plot = sns.lineplot(
-            data=final_data,
-            x='Month',
-            y='Transaction_amount',
-            color='#439534',
-            markers='o',
-            errorbar=None
-        )
-        plot.set_xticks(existing_months)
-        plot.set_xticklabels([months_names[int(i) - 1] for i in existing_months])
+            existing_months = sorted(final_data['Month'].dropna().unique())
+            plt.figure(figsize=(10, 5))
+            plot = sns.lineplot(
+                data=final_data,
+                x='Month',
+                y='Transaction_amount',
+                color='#439534',
+                markers='o',
+                errorbar=None
+            )
+            plot.set_xticks(existing_months)
+            plot.set_xticklabels([months_names[int(i) - 1] for i in existing_months])
 
-        plot.set_xlim(min(existing_months) - 0.5, max(existing_months) + 0.5)
+            plot.set_xlim(min(existing_months) - 0.5, max(existing_months) + 0.5)
 
-        plt.xticks(fontsize=20)
-        plt.xlabel("Month", fontsize=0)
-        plt.ylabel("Transaction Amount", fontsize=20)
-        plt.yticks(fontsize=20)
-        st.pyplot(plt)
+            plt.xticks(fontsize=20)
+            plt.xlabel("Month", fontsize=0)
+            plt.ylabel("Transaction Amount", fontsize=20)
+            plt.yticks(fontsize=20)
+            st.pyplot(plt)
+            plt.close()
 
-    with r2c3:
-        st.markdown(
-            "<h7 style='font-size:16px; font-weight:600;'>Transaction Frequency and Amount by Hour</h7>",
-            unsafe_allow_html=True
-        )
-        fig, ax1 = plt.subplots(figsize=(10, 5.0))
-        # Histogram (green)
-        sns.histplot(
-            data=final_data,
-            x='Hour',
-            color='#439534',
-            binwidth=1,
-            alpha=0.7,
-            ax=ax1
-        )
-        ax1.set_ylabel('Number of Transactions per Hour', color='#439534', fontsize=20)
-        ax1.tick_params(axis='y', labelcolor='#439534', labelsize=20)
-        ax1.set_xlim(0, 23)
-        ax1.set_xlabel('Hour', fontsize=20)
-        ax1.tick_params(axis='x', labelsize=20)
-        # Line plot (red)
-        ax2 = ax1.twinx()
-        sns.lineplot(
-            data=final_data.groupby('Hour')['Transaction_amount'].sum().reset_index(),
-            x='Hour',
-            y='Transaction_amount',
-            color='red',
-            linewidth=2.5,
-            ax=ax2
-        )
-        ax2.set_ylabel('Total Transaction Amount', color='red', fontsize=20)
-        ax2.tick_params(axis='y', labelcolor='red', labelsize=20)
-        # Title and style
-        plt.tight_layout()
-        st.pyplot(fig)
+        with r2c3:
+            st.markdown(
+                "<h7 style='font-size:16px; font-weight:600;'>Transaction Frequency and Amount by Hour</h7>",
+                unsafe_allow_html=True
+            )
+            fig, ax1 = plt.subplots(figsize=(10, 5.0))
+            # Histogram (green)
+            sns.histplot(
+                data=final_data,
+                x='Hour',
+                color='#439534',
+                binwidth=1,
+                alpha=0.7,
+                ax=ax1
+            )
+            ax1.set_ylabel('Number of Transactions per Hour', color='#439534', fontsize=20)
+            ax1.tick_params(axis='y', labelcolor='#439534', labelsize=20)
+            ax1.set_xlim(0, 23)
+            ax1.set_xlabel('Hour', fontsize=20)
+            ax1.tick_params(axis='x', labelsize=20)
+            # Line plot (red)
+            ax2 = ax1.twinx()
+            sns.lineplot(
+                data=final_data.groupby('Hour')['Transaction_amount'].sum().reset_index(),
+                x='Hour',
+                y='Transaction_amount',
+                color='red',
+                linewidth=2.5,
+                ax=ax2
+            )
+            ax2.set_ylabel('Total Transaction Amount', color='red', fontsize=20)
+            ax2.tick_params(axis='y', labelcolor='red', labelsize=20)
+            # Title and style
+            plt.tight_layout()
+            st.pyplot(fig)
+            plt.close()
 
-    with r3c1:
-        st.markdown(
-            "<h5 style='font-size:16px; font-weight:600;'>Daily Transaction where spending spikes</h5>",
-            unsafe_allow_html=True
-        )
-        plt.figure(figsize=(10, 5))
-        plot = sns.lineplot(data=final_data, x='Date', y='Transaction_amount', errorbar=None, color='#439534')
-        plot.set_xlim(1, 32)
-        plt.xticks(fontsize=20)
-        plt.xlabel("Date", fontsize=20)
-        plt.ylabel("Transaction Amount", fontsize=20)
-        plt.yticks(fontsize=20)
-        st.pyplot(plt)
+        with r3c1:
+            st.markdown(
+                "<h5 style='font-size:16px; font-weight:600;'>Daily Transaction where spending spikes</h5>",
+                unsafe_allow_html=True
+            )
+            plt.figure(figsize=(10, 5))
+            plot = sns.lineplot(data=final_data, x='Date', y='Transaction_amount', errorbar=None, color='#439534')
+            plot.set_xlim(1, 32)
+            plt.xticks(fontsize=20)
+            plt.xlabel("Date", fontsize=20)
+            plt.ylabel("Transaction Amount", fontsize=20)
+            plt.yticks(fontsize=20)
+            st.pyplot(plt)
+            plt.close()
 
-    with r3c2:
-        st.markdown(
-            "<h5 style='font-size:16px; font-weight:600;'>Most used Transaction Type</h5>",
-            unsafe_allow_html=True
-        )
-        top_10_types = final_data['Transaction_type'].value_counts().nlargest(10).index
-        filtered_data = final_data[final_data['Transaction_type'].isin(top_10_types)]
-        plt.figure(figsize=(7.8, 6.2))
-        sns.countplot(data=filtered_data, y='Transaction_type', color='#439534',
-                      order=filtered_data['Transaction_type'].value_counts().index)
-        plt.xlabel('Count', fontsize=20)
-        plt.xticks(fontsize=17)
-        plt.ylabel('Transaction Type', fontsize=0)
-        plt.yticks(fontsize=15)
-        st.pyplot(plt)
-    with r3c3:
-        st.markdown(
-            "<h7 style='font-size:16px; font-weight:600;'>Avg Transaction amount by Transaction_type</h7>",
-            unsafe_allow_html=True
-        )
-        top_10_types = final_data['Transaction_type'].value_counts().nlargest(10).index
-        filtered_data = final_data[final_data['Transaction_type'].isin(top_10_types)]
+        with r3c2:
+            st.markdown(
+                "<h5 style='font-size:16px; font-weight:600;'>Most used Transaction Type</h5>",
+                unsafe_allow_html=True
+            )
+            top_10_types = final_data['Transaction_type'].value_counts().nlargest(10).index
+            filtered_data = final_data[final_data['Transaction_type'].isin(top_10_types)]
+            plt.figure(figsize=(7.8, 6.2))
+            sns.countplot(data=filtered_data, y='Transaction_type', color='#439534',
+                          order=filtered_data['Transaction_type'].value_counts().index)
+            plt.xlabel('Count', fontsize=20)
+            plt.xticks(fontsize=17)
+            plt.ylabel('Transaction Type', fontsize=0)
+            plt.yticks(fontsize=15)
+            st.pyplot(plt)
+            plt.close()
 
-        Grouped_avg_type = (filtered_data.groupby('Transaction_type')['Transaction_amount']
-                            .mean().sort_values(ascending=False).reset_index())
+        with r3c3:
+            st.markdown(
+                "<h7 style='font-size:16px; font-weight:600;'>Avg Transaction amount by Transaction_type</h7>",
+                unsafe_allow_html=True
+            )
+            top_10_types = final_data['Transaction_type'].value_counts().nlargest(10).index
+            filtered_data = final_data[final_data['Transaction_type'].isin(top_10_types)]
 
-        plt.figure(figsize=(7.8, 6.2))
-        sns.barplot(data=Grouped_avg_type, y='Transaction_type', x='Transaction_amount',
-                    order=Grouped_avg_type['Transaction_type'], color='#439534')
-        plt.xlabel('Amount', fontsize=20)
-        plt.ylabel('Transaction_Type', fontsize=0)
-        plt.xticks(fontsize=17)
-        plt.yticks(fontsize=15)
-        st.pyplot(plt)
+            Grouped_avg_type = (filtered_data.groupby('Transaction_type')['Transaction_amount']
+                                .mean().sort_values(ascending=False).reset_index())
 
-    with r4c1:
-        st.markdown(
-            "<h5 style='font-size:16px; font-weight:600;'>(Paid In) vs. (Withdraws)</h5>",
-            unsafe_allow_html=True
-        )
-        paid_in = final_data['paid_in_or_Withdraw'].value_counts()
-        plt.figure(figsize=(7.8, 6.2))
-        fig = go.Figure(go.Pie(labels=paid_in.index, values=paid_in.values, hole=.4,
-                               marker_colors=['#439534', 'red'],
-                               textinfo='percent+label',
-                               hoverinfo='value'))
-        fig.update_layout(
-            showlegend=False,
-            height=450,
-        )
-        st.plotly_chart(fig, use_container_width=True)
+            plt.figure(figsize=(7.8, 6.2))
+            sns.barplot(data=Grouped_avg_type, y='Transaction_type', x='Transaction_amount',
+                        order=Grouped_avg_type['Transaction_type'], color='#439534')
+            plt.xlabel('Amount', fontsize=20)
+            plt.ylabel('Transaction_Type', fontsize=0)
+            plt.xticks(fontsize=17)
+            plt.yticks(fontsize=15)
+            st.pyplot(plt)
+            plt.close()
 
-    with r4c2:
-        st.markdown(
-            "<h5 style='font-size:16px; font-weight:600;'>Transaction Impact on Account Balance</h5>",
-            unsafe_allow_html=True
-        )
-        plt.figure(figsize=(18, 7))
-        Low_balance = 100
-        big_transaction = final_data['Transaction_amount'].quantile(.75)
+        with r4c1:
+            st.markdown(
+                "<h5 style='font-size:16px; font-weight:600;'>(Paid In) vs. (Withdraws)</h5>",
+                unsafe_allow_html=True
+            )
+            paid_in = final_data['paid_in_or_Withdraw'].value_counts()
+            plt.figure(figsize=(7.8, 6.2))
+            fig = go.Figure(go.Pie(labels=paid_in.index, values=paid_in.values, hole=.4,
+                                   marker_colors=['#439534', 'red'],
+                                   textinfo='percent+label',
+                                   hoverinfo='value'))
+            fig.update_layout(
+                showlegend=False,
+                height=450,
+            )
+            st.plotly_chart(fig, use_container_width=True)
+            plt.close()
 
-        sns.scatterplot(
-            data=final_data, x='Transaction_amount', y='Balance',
-            hue=final_data['Transaction_amount'] < Low_balance,
-            palette={True: 'red', False: "#439534"},
-            style=final_data["Transaction_amount"] > big_transaction,
-            markers={True: 'X', False: 'o'},
-            size=final_data['Transaction_amount'],
-            sizes=(20, 200),
-            alpha=0.9
-        )
-        # Add reference lines
-        plt.axvline(big_transaction, color='blue', linestyle='--', label='Big Transaction Threshold')
-        plt.axhline(Low_balance, color='red', linestyle='--', label='Low Balance Threshold')
+        with r4c2:
+            st.markdown(
+                "<h5 style='font-size:16px; font-weight:600;'>Transaction Impact on Account Balance</h5>",
+                unsafe_allow_html=True
+            )
+            plt.figure(figsize=(18, 7))
+            Low_balance = 100
+            big_transaction = final_data['Transaction_amount'].quantile(.75)
 
-        plt.xlabel('Transaction Amount', fontsize=15)
-        plt.ylabel('Account Balance', fontsize=15)
-        plt.xticks(fontsize=15)
-        plt.yticks(fontsize=15)
-        plt.legend(title='Risk Indicators', bbox_to_anchor=(1.05, 1), loc='upper left')
+            sns.scatterplot(
+                data=final_data, x='Transaction_amount', y='Balance',
+                hue=final_data['Transaction_amount'] < Low_balance,
+                palette={True: 'red', False: "#439534"},
+                style=final_data["Transaction_amount"] > big_transaction,
+                markers={True: 'X', False: 'o'},
+                size=final_data['Transaction_amount'],
+                sizes=(20, 200),
+                alpha=0.9
+            )
+            # Add reference lines
+            plt.axvline(big_transaction, color='blue', linestyle='--', label='Big Transaction Threshold')
+            plt.axhline(Low_balance, color='red', linestyle='--', label='Low Balance Threshold')
 
-        #  risk zones
-        plt.text(
-            x=big_transaction * 1.1,
-            y=Low_balance * 0.5,
-            s='High Risk Zone',
-            color='red',
-            fontsize=12,
-            bbox=dict(facecolor='white', alpha=0.8)
-        )
+            plt.xlabel('Transaction Amount', fontsize=15)
+            plt.ylabel('Account Balance', fontsize=15)
+            plt.xticks(fontsize=15)
+            plt.yticks(fontsize=15)
+            plt.legend(title='Risk Indicators', bbox_to_anchor=(1.05, 1), loc='upper left')
 
-        plt.tight_layout()
-        st.pyplot(plt)
+            #  risk zones
+            plt.text(
+                x=big_transaction * 1.1,
+                y=Low_balance * 0.5,
+                s='High Risk Zone',
+                color='red',
+                fontsize=12,
+                bbox=dict(facecolor='white', alpha=0.8)
+            )
+
+            plt.tight_layout()
+            st.pyplot(plt)
+            plt.close()
+    else:
+        st.warning("Please upload your M-Pesa statement first in the 'Upload & Query' tab.")
