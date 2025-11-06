@@ -11,14 +11,14 @@ from Extract_pdf import extract_mpesa_data
 from cleaning import *
 
 
-@st.cache_data
-def load_data():
-    with open("Mpesa_model.pkl", 'rb') as f:
-        data1 = pickle.load(f)
-        return data1
-
-
-combined_data = load_data()
+# @st.cache_data
+# def load_data():
+#     with open("Mpesa_model.pkl", 'rb') as f:
+#         data1 = pickle.load(f)
+#         return data1
+#
+#
+# combined_data = load_data()
 
 st.set_page_config(page_title="MpesaFinancial - Pro", layout="wide", initial_sidebar_state="expanded")
 
