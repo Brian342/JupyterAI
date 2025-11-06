@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import pandas as pd
 
 df_model = pd.read_csv("statement_cleaned")
@@ -35,3 +36,17 @@ daily_df = (
     .rename(columns={'Transaction_amount': 'Daily_Spend'})
 )
 
+# prophet model
+from prophet import Prophet
+
+prophet_df = daily_df.rename(columns={'Date': 'ds', 'Daily_Spend': 'y'})
+
+model = Prophet()
+model.fit(prophet_df)
+
+future = model.make_future_dataframe(periods=30) # forecast the next 30 days
+forecast = model.predict(future)
+
+model.plot(forecast)
+plt.title('Predicted Daily Spending')
+plt.show()
