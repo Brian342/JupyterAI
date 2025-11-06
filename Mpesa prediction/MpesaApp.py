@@ -351,7 +351,7 @@ with tabs[1]:
                 final_data.set_index('Receipt', inplace=True)
 
                 st.dataframe(final_data.head())
-                print(final_data.columns)
+                final_data.to_csv("statement_cleaned")
                 st.session_state["final_data"] = final_data
 
     with col2:
