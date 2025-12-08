@@ -1,0 +1,13 @@
+streamlit
+pandas
+numpy
+matplotlib
+seaborn
+plotly
+python-dateutil
+PyPDF2
+pdfplumber
+pikepdf
+tabula-py
+tabula
+JPype1
